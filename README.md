@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # 🌐 Real-Time Device Tracker  
 *by Kritika Kasera*  
 
