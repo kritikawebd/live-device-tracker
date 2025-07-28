@@ -12,6 +12,5 @@
 npm install
 npm start
 
-=======
 # live-device-tracker
 
