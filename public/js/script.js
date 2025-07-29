@@ -1,16 +1,43 @@
-const socket = io(); // Auto-connects to same host
+const socket = io();
 
-// Basic Leaflet map
-const map = L.map('map').setView([20.59, 78.96], 5);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(
+        (position) => {
+            const randomShift = Math.random() * 0.0005;  
+            const latitude = position.coords.latitude + randomShift;
+            const longitude = position.coords.longitude + randomShift;
+            socket.emit("send-location", { latitude, longitude });
+        },
+        (error) => {
+            console.error(error);
+        },
+        {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 2500
+        }
+    );
+}
 
-// Mock device movement (remove in production)
-setInterval(() => {
-  const lat = 20.59 + (Math.random() * 0.1);
-  const lng = 78.96 + (Math.random() * 0.1);
-  socket.emit('send-location', { lat, lng });
-}, 3000);
+const map = L.map("map").setView([0, 0], 10);
 
-socket.on('receive-location', (data) => {
-  L.marker([data.lat, data.lng]).addTo(map);
+L.tileLayer("https://a.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+const markers = {};
+
+socket.on("receive-location", (data) => {
+    const { id, latitude, longitude } = data;
+    map.setView([latitude, longitude], 15);
+    if (markers[id]) {
+        markers[id].setLatLng([latitude, longitude]);
+    } else {
+        markers[id] = L.marker([latitude, longitude]).addTo(map);
+    }
+});
+
+socket.on("user-disconnected", (id) => {
+    if (markers[id]) {
+        map.removeLayer(markers[id]);
+        delete markers[id];
+    }
 });

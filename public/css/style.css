@@ -10,9 +10,7 @@ body {
     height: 100%;
 }
 
-/* NEW: Just add this one property */
 #map {
     height: 100%;
     width: 100%;
-    border: 2px solid #4CAF50; /* Simple green border */
 }
