@@ -1,5 +1,4 @@
-console.log("Live Device Tracker - Customized by Kritika Kasera"); // NEW
-
+// server.js (or app.js)
 const express = require("express");
 const socketio = require("socket.io");
 const http = require("http");
@@ -9,32 +8,39 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
+// Middleware
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
-// Deleted duplicate static middleware
 
-io.on("connection", function (socket) {
-    console.log(`Device connected: ${socket.id.slice(0, 5)}...`); // NEW
-    socket.on("send-location", function (data) {
-        io.emit("receive-location", { id: socket.id, ...data });
-    });
-    socket.on("disconnect", function () {
-        io.emit("user-disconnected", socket.id);
-    });
+// Socket.io Connection
+io.on("connection", (socket) => {
+  console.log(`Device connected: ${socket.id.slice(0, 5)}...`);
+  
+  socket.on("send-location", (data) => {
+    io.emit("receive-location", { id: socket.id, ...data });
+  });
+
+  socket.on("disconnect", () => {
+    io.emit("user-disconnected", socket.id);
+  });
 });
 
-app.get("/", function (req, res) {
-    res.render("index");
+// Routes
+app.get("/", (req, res) => {
+  res.render("index"); // Ensure views/index.ejs exists
 });
 
-app.use((err, req, res, next) => { // NEW
+// Error Handling (NEW)
+app.use((err, req, res, next) => {
   console.error("Error:", err.message);
-  res.status(500).send("Something went wrong");
+  res.status(500).send("Server error");
 });
 
-server.listen(8000, () => {
-    console.log(`  // NEW
-      Live Tracker v1.0
-      Running on http://localhost:8000
-    `);
+// Vercel-Compatible Server Start (UPDATED)
+const PORT = process.env.PORT || 8000; // Critical for Vercel
+server.listen(PORT, () => {
+  console.log(`
+    Live Tracker v1.0
+    Running on port ${PORT}
+  `);
 });
