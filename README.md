@@ -1,6 +1,8 @@
-<<<<<<< HEAD
 # 🌐 Real-Time Device Tracker  
 *by Kritika Kasera*  
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)](https://nodejs.org/)  
 
 ## 🚀 Features  
 - Live GPS tracking with WebSockets  
@@ -9,9 +11,11 @@
 
 ## ⚡ Quick Start  
 ```bash
-npm install
-npm start
+# Clone repository
+git clone https://github.com/kritikawebd/live-device-tracker.git
 
-=======
-# live-device-tracker
->>>>>>> f4d61d8883a5d1e80568b387a9bf21b51ff6ee8f
+# Install dependencies
+npm install
+
+# Start development server
+npm start
